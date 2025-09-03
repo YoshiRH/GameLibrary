@@ -23,7 +23,8 @@ namespace GameLibrary.Api.Controllers
                 Title = g.Title,
                 Genre = g.Genre,
                 ReleaseDate = g.ReleaseDate,
-                Price = g.Price
+                Price = g.Price,
+                Reviews = g.Reviews
             });
 
             return Ok(result);
@@ -49,6 +50,21 @@ namespace GameLibrary.Api.Controllers
             };
 
             return Ok(result);
+        }
+
+        [HttpGet("{id}/reviews")]
+        public async Task<ActionResult<IEnumerable<ReviewDto>>> GetGameReviews(int id)
+        {
+            var game = await _gameService.GetGameByIdAsync(id);
+
+            if (game is null)
+            {
+                return NotFound();
+            }
+
+            var reviews = await _gameService.GetGameReviews(id);
+
+            return Ok(reviews);
         }
 
         [HttpPost]

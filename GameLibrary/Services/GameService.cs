@@ -1,5 +1,6 @@
 ﻿using GameLibrary.Api.Entities;
 using GameLibrary.Api.Repositories;
+using GameLibrary.Api.Dtos;
 
 namespace GameLibrary.Api.Services
 {
@@ -16,6 +17,17 @@ namespace GameLibrary.Api.Services
         {
             var games = await _gameRepository.GetAllGamesAsync();
             return games;
+        }
+
+        public async Task<IEnumerable<ReviewDto>> GetGameReviews(int id)
+        {
+            var reviews = await _gameRepository.GetGameReviews(id);
+
+            if(reviews == null) {
+                throw new KeyNotFoundException($"Game not found.");
+            }
+
+            return reviews;
         }
 
         public async Task<Game> GetGameByIdAsync(int id)

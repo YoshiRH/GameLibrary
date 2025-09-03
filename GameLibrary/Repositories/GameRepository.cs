@@ -1,6 +1,7 @@
 ﻿using GameLibrary.Api.Entities;
 using GameLibrary.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using GameLibrary.Api.Dtos;
 
 namespace GameLibrary.Api.Repositories
 {
@@ -11,6 +12,30 @@ namespace GameLibrary.Api.Repositories
         public GameRepository(GameDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<ReviewDto>> GetGameReviews(int id)
+        {
+            var game = await _context.Games.FindAsync(id);
+
+            if (game == null) {
+                throw new KeyNotFoundException($"Game not found.");
+            }
+
+            var reviews = await _context.Reviews
+                .Where(r => r.GameId == id)
+                .Select(r => new ReviewDto
+                {
+                    Id = r.Id,
+                    UserName = r.UserName,
+                    Content = r.Content,
+                    Rating = r.Rating,
+                    GameId = r.GameId,
+                    Game = r.Game
+                })
+                .ToListAsync();
+
+            return reviews;
         }
 
         public async Task AddGameAsync(Game game)
