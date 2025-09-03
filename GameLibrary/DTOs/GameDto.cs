@@ -1,4 +1,4 @@
-﻿namespace GameLibrary.Api.DTOs
+﻿namespace GameLibrary.Api.Dtos
 {
     public class GameDto
     {
